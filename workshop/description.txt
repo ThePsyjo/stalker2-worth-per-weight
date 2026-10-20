@@ -1,0 +1,16 @@
+Adds the base value per kilogram to every sellable item name, so you can see at a glance what is worth carrying.
+
+Example: Medkit [2k ₭/kg] · Bandage [4k ₭/kg] · Flash [40k ₭/kg] · Bread [<1k ₭/kg]
+
+[h2]Details[/h2]
+[list]
+[*]Covers ~370 items: weapons, armor, artifacts, attachments, ammo, consumables, mutant loot, detectors, NVGs.
+[*]Value = item base price / weight, in thousands (under 500 shows as <1k). Traders pay a fraction of the base price and less for worn gear, so use it to compare items, not as the exact sale price.
+[*]Quest items are skipped.
+[*]All 18 game languages.
+[*]Includes base game and DLC items.
+[/list]
+
+[h2]Compatibility[/h2]
+Uses the game's own mod text override (like Zone Kit mods), so it works alongside other text mods. If another mod renames the same item, whichever loads last wins.
+Built for game version 2.0.6. Prices or weights changed by a game patch need a rebuilt version of this mod.

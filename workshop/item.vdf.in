@@ -1,0 +1,11 @@
+"workshopitem"
+{
+	"appid"		"1643320"
+	"publishedfileid"	"@ID@"
+	"contentfolder"	"@ROOT@/build/workshop"
+	"previewfile"	"@ROOT@/workshop/preview.jpg"
+	"visibility"	"2"
+	"title"		"Worth per Weight"
+	"description"	"@DESC@"
+	"changenote"	"@NOTE@"
+}

@@ -1,0 +1,50 @@
+--- a/retoc_cli/src/main.rs	2026-10-19 19:36:52.061156652 +0200
++++ b/retoc_cli/src/main.rs	2026-10-20 22:02:54.075811774 +0200
+@@ -774,7 +774,9 @@
+ 
+     let toc_version = config.toc_version_override.unwrap_or(args.version.toc_version());
+ 
+-    let mut writer = IoStoreWriter::new(&args.output, toc_version, Some(container_header_version), mount_point.into())?;
++    // RETOC_TOC_MOUNT_POINT overrides the directory-index mount point (asset paths still resolve from ../../../)
++    let toc_mount_point: UEPathBuf = std::env::var("RETOC_TOC_MOUNT_POINT").map(|m| UEPathBuf::from(m)).unwrap_or_else(|_| mount_point.into());
++    let mut writer = IoStoreWriter::new(&args.output, toc_version, Some(container_header_version), toc_mount_point)?;
+ 
+     let log = Log::new_stdout(args.verbose, args.debug);
+     let mut asset_paths = vec![];
+@@ -932,6 +934,14 @@
+     prog_ref.inspect(|p| p.finish_with_message(""));
+     log.set_progress(None);
+ 
++    // RETOC_PACKAGE_REDIRECTS="/Game/A=/Mod/A;..." adds container header package redirects (source name -> target package)
++    if let Ok(spec) = std::env::var("RETOC_PACKAGE_REDIRECTS") {
++        for pair in spec.split(';').filter(|s| !s.is_empty()) {
++            let (source, target) = pair.split_once('=').context("RETOC_PACKAGE_REDIRECTS entries must be source=target")?;
++            writer.add_package_redirect(source, retoc::FPackageId::from_name(target))?;
++        }
++    }
++
+     writer.finalize()?;
+ 
+     // create empty pak file if one does not already exist (necessary for game to detect and load container)
+--- a/retoc/src/lib.rs	2026-10-19 19:36:51.775155799 +0200
++++ b/retoc/src/lib.rs	2026-10-20 22:02:54.075520170 +0200
+@@ -728,7 +728,7 @@
+     }
+ }
+ impl FPackageId {
+-    fn from_name(name: &str) -> Self {
++    pub fn from_name(name: &str) -> Self {
+         Self(lower_utf16_cityhash(name))
+     }
+ }
+--- a/retoc/src/container_header.rs	2026-10-19 19:36:51.774155797 +0200
++++ b/retoc/src/container_header.rs	2026-10-20 22:04:02.522715685 +0200
+@@ -198,7 +198,7 @@
+             packages: StoreEntries::default(),
+             optional_segment_package_ids: vec![],
+             optional_segment_store_entries: vec![],
+-            redirect_name_map: FNameMap::default(),
++            redirect_name_map: FNameMap::create(EMappedNameType::Container),
+             localized_packages: vec![],
+             package_redirects: vec![],
+             soft_package_references: None,
