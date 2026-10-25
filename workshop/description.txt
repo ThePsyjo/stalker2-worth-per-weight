@@ -1,16 +1,16 @@
-Adds the base value per kilogram to every sellable item name, so you can see at a glance what is worth carrying.
+Shows each item's value per kilogram right next to its price in every item tooltip, so you can see at a glance what is worth carrying.
 
-Example: Medkit [2k ₭/kg] · Bandage [4k ₭/kg] · Flash [40k ₭/kg] · Bread [<1k ₭/kg]
+Example: SEVA-I Suit  45k/kg · 312750 ₭
 
 [h2]Details[/h2]
 [list]
-[*]Covers ~370 items: weapons, armor, artifacts, attachments, ammo, consumables, mutant loot, detectors, NVGs.
-[*]Value = item base price / weight, in thousands (under 500 shows as <1k). Traders pay a fraction of the base price and less for worn gear, so use it to compare items, not as the exact sale price.
-[*]Quest items are skipped.
-[*]All 18 game languages.
-[*]Includes base game and DLC items.
+[*]Uses the price the tooltip shows: upgrades, durability and items from other mods are included automatically.
+[*]Inventory, traders, stashes and containers. Values below 500 per kg show as <1k/kg.
+[*]Item names are not changed, so it works together with renaming mods like True Gun Names.
+[*]Pure Workshop mod (Blueprint), no extra tools to install.
 [/list]
 
-[h2]Compatibility[/h2]
-Uses the game's own mod text override (like Zone Kit mods), so it works alongside other text mods. If another mod renames the same item, whichever loads last wins.
-Built for game version 2.0.6. Prices or weights changed by a game patch need a rebuilt version of this mod.
+[h2]Notes[/h2]
+The value appears a moment after the tooltip opens. On some long weapon tooltips it can touch the weight display.
+Traders pay only part of the shown price; use the value to compare items.
+Built for game version 2.0.6. Source and build tools: https://github.com/ThePsyjo/stalker2-worth-per-weight

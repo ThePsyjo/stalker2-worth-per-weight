@@ -1,0 +1,11 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "Worth per Weight",
+	"Description": "Shows each item's value per kilogram next to its price",
+	"Category": "Game Features",
+	"CanContainContent": true,
+	"EnabledByDefault": true,
+	"ExplicitlyLoaded": false
+}

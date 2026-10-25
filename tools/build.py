@@ -137,6 +137,11 @@ def main():
     ap.add_argument('--symbol', default='₭', help='currency sign (default ₭)')
     ap.add_argument('--format', choices=('short', 'full'), default='short', help='2k (default) or 1,900')
     ap.add_argument('--newline', action='store_true', help='put the rating on its own line')
+    ap.add_argument('--mode', choices=('dynamic', 'names', 'both'), default='dynamic',
+                    help='dynamic: Blueprint writes value/kg next to the tooltip price (default); '
+                         'names: static rating appended to item names; both')
+    ap.add_argument('--cooked', default=str(ROOT / 'ue/Stalker2/Saved/Cooked/Linux/Stalker2/Plugins/ValuePerKilo/Content'),
+                    help='cooked Blueprint assets from tools/build_bp.sh (dynamic mode)')
     ap.add_argument('--out', default=str(ROOT / 'build'))
     a = ap.parse_args()
     game, out = Path(a.game), Path(a.out)
@@ -188,7 +193,14 @@ def main():
         patches = {p: '\n'.join(blocks) for p, blocks in patches.items()}
 
         out.mkdir(parents=True, exist_ok=True)
-        workshop = zonekit.package(entries, patches, ROOT / 'template', out / 'workshop', a.retoc, a.repak, tmp)
+        if a.mode == 'dynamic':
+            entries, patches = {}, {}
+        cooked = None
+        if a.mode in ('dynamic', 'both'):
+            cooked = Path(a.cooked)
+            if not any(cooked.glob('*.uasset')):
+                sys.exit(f'no cooked Blueprint in {cooked}; run tools/build_bp.sh first')
+        workshop = zonekit.package(entries, patches, ROOT / 'template', out / 'workshop', a.retoc, a.repak, tmp, cooked)
 
         with open(out / 'ratings.csv', 'w', newline='', encoding='utf-8') as f:
             w = csv.DictWriter(f, ['Name', 'SID', 'Type', 'Cost', 'Weight', 'PerKg', 'LocSID'], extrasaction='ignore')

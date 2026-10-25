@@ -58,15 +58,39 @@ def _manifest(path, files):
     path.write_text(''.join(f'{f}\t{stamp}\r\n' for f in files), encoding='utf-8')
 
 
-def package(entries, patches, template, out, retoc, repak, tmp):
+def _add_cooked(stage, cooked):
+    """Place assets cooked by the stub project (ue/Stalker2, plugin /<Mod>/) into the staging tree.
+
+    *_WorldSubsystemData goes to OverrideContent (/Game/ on disk, redirected to /<Mod>/ like the text database);
+    its class lives in the game's /Script/Engine, stubbed as the same-length /Script/WPWEng.
+    """
+    for f in sorted(Path(cooked).glob('*.uasset')) + sorted(Path(cooked).glob('*.uexp')):
+        data = f.read_bytes()
+        if '_WorldSubsystemData' in f.name:
+            dst = stage / 'Stalker2/Content' / f.name
+            data = data.replace(b'/Script/WPWEng', b'/Script/Engine')
+        else:
+            dst = stage / f'Stalker2/Mods/{MOD}/Content' / f.name
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        dst.write_bytes(data)
+
+
+def package(entries, patches, template, out, retoc, repak, tmp, cooked=None):
     """Write the Workshop content folder to out (replaced if it exists).
 
-    entries: text database {key: {culture: text}}; patches: cfg patch files {path under GameLite/: text}.
+    entries: text database {key: {culture: text}} (empty: no database); patches: cfg patch files
+    {path under GameLite/: text}; cooked: folder with cooked plugin assets from tools/build_bp.sh.
     """
     stage = Path(tmp) / 'zk'
     shutil.rmtree(stage, ignore_errors=True)
     shutil.copytree(template, stage)
-    _write_db(stage, entries)
+    if entries:
+        _write_db(stage, entries)
+    else:
+        for f in (stage / 'Stalker2/Content').glob(f'{DB_STEM}.*'):
+            f.unlink()
+    if cooked:
+        _add_cooked(stage, cooked)
     for rel, text in patches.items():
         f = stage / 'Stalker2/Content/GameLite' / rel
         f.parent.mkdir(parents=True, exist_ok=True)
@@ -110,7 +134,7 @@ def package(entries, patches, template, out, retoc, repak, tmp):
         listed = []
         # pak payload: loose files (uplugin, AssetRegistry.bin, cfg patches); cooked assets live in the utoc
         (pak_dir / pak_src).mkdir(parents=True)
-        for f in sorted((stage / pak_src).rglob('*')):
+        for f in sorted((stage / pak_src).rglob('*')) if (stage / pak_src).exists() else []:
             if f.is_file() and f.suffix not in ('.uasset', '.uexp'):
                 rel = f.relative_to(stage / pak_src)
                 (pak_dir / pak_src / rel).parent.mkdir(parents=True, exist_ok=True)
