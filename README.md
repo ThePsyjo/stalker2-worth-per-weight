@@ -9,6 +9,17 @@ other mods are covered. Item names are not touched (compatible with renaming mod
 
 ## Building
 
+```sh
+make tools                     # repak + patched retoc into .bin/ (needs cargo, git)
+make UE_ROOT=/path/to/UE GAME="/path/to/S.T.A.L.K.E.R. 2 Heart of Chornobyl"   # Blueprint + Workshop folder
+make install-local             # test: copy over your local Workshop download
+make upload STEAM_USER=<name> NOTE="change note"
+make preview                   # regenerate workshop/preview.jpg from the game's font
+```
+
+The individual steps behind those targets:
+
+
 Requirements: Python 3, an installed copy of the game, and two Rust tools in `.bin/` (or on `PATH`):
 
 ```sh
