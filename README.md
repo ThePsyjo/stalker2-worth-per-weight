@@ -6,6 +6,7 @@ other mods are covered. Item names are not touched (compatible with renaming mod
 
 - Steam Workshop: https://steamcommunity.com/sharedfiles/filedetails/?id=3823156532
 - Values below 500 show as `<1k/kg`.
+- Tested on game versions 2.0.6 and 2.1.0.
 
 ## Building
 

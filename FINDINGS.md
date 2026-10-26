@@ -73,3 +73,8 @@
 - Stock UE 5.5.4 Linux works: stub classes with the game's names; BlueprintReadOnly on stub properties is editor-only,
   cooked Blueprints resolve properties by name at runtime. Linux editor has no Windows cooker; cooking for Linux is fine.
 - UE4SS UHT header generator crashes on 2.0.6 (USceneComponent::StaticClass null); CXX dump + usmap work.
+
+## 2026-10-26 — game 2.1.0
+- Dynamic Blueprint mod (built against 2.0.6 dumps) works unchanged on 2.1.0: it binds only to class/field names.
+- S2AE 2.1.14 reports 2.1.0 as unsupported and "initialized with errors"; UE4SS did not write a log this session
+  (signatures from the 2.0.5 fix may no longer match; only needed for development).
