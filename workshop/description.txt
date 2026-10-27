@@ -13,4 +13,5 @@ Example: SEVA-I Suit  45k/kg · 312750 ₭
 [h2]Notes[/h2]
 The value appears a moment after the tooltip opens. On some long weapon tooltips it can touch the weight display.
 Traders pay only part of the shown price; use the value to compare items.
-Built for game version 2.0.6. Source and build tools: https://github.com/ThePsyjo/stalker2-worth-per-weight
+Works on game versions 2.0.6 and 2.1.0. Source and build tools: https://github.com/ThePsyjo/stalker2-worth-per-weight
+
